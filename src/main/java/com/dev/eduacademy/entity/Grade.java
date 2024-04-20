@@ -5,7 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+/**
+ * Grade is an entity class that represents a grade for an assignment or exam.
+ * It contains the grade name, grade letter, date, course, assignment, and exam.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,19 +21,20 @@ public class Grade {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "grade", nullable = false)
-    private Double grade;
+    private String gradeName;
+    private String gradeLetter;
+    @CreationTimestamp
+    private String date;
 
     @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
+    @JoinColumn(name = "course_id")
     private Course course;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private User student;
+    @JoinColumn(name = "assignment_id")
+    private Assignment assignment;
 
-    @OneToOne
-    @JoinColumn(name = "student_answer_id", nullable = false)
-    private StudentAnswer studentAnswer;
+    @ManyToOne
+    @JoinColumn(name = "exam_id")
+    private Exam exam;
 }

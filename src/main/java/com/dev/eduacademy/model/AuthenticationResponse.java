@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * AuthenticationResponse is a model class that represents the response to a successful authentication.
+ * It contains the JWT token.
+ */
 @Data
 @Builder
 @AllArgsConstructor

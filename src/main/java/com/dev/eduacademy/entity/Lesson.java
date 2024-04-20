@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Lesson is an entity class that represents a lesson in a course.
+ * It contains the lesson title, content, and course.
+ */
 @Data
 @Builder
 @NoArgsConstructor

@@ -1,12 +1,20 @@
 package com.dev.eduacademy.entity;
 
+import com.dev.eduacademy.util.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * User is an entity class that represents a user in the system.
+ * It contains the user's email, password, username, role, instructed courses, enrolled courses, grades, and enrollment requests.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -24,41 +32,40 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String username;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "user_role",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles;
 
-    @ManyToMany
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_instructed_courses",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private List<Course> instructedCourses;
+    private Set<Course> instructedCourses = new HashSet<>();
 
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "user_enrolled_courses",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private List<Course> enrolledCourses;
+    private Set<Course> enrolledCourses = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<StudentAnswer> studentAnswers;
+    @JsonIgnore
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    private Set<Grade> grades = new HashSet<>();
 
-    @OneToMany(mappedBy = "student")
-    private List<Grade> grades;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<EnrollmentRequest> enrollmentRequests = new HashSet<>();
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        roles.forEach(it -> authorities.addAll(it.getRoleType().getAuthorities()));
-        return authorities;
+        return role.getAuthorities();
     }
 
     @Override
@@ -89,5 +96,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+
+        return getId() != null ? getId().equals(user.getId()) : user.getId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
     }
 }

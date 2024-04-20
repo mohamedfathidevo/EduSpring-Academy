@@ -13,6 +13,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import static com.dev.eduacademy.util.Role.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+/**
+ * This class is responsible for the security configuration of the application.
+ * It extends the WebSecurityConfigurerAdapter which provides a convenient base class for creating a WebSecurityConfigurer instance.
+ * The configuration defines URL patterns that should be secured.
+ *
+ * @author mohamedfathidev
+ * @version 1.0
+ * @since 2023.3.5
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -25,6 +34,15 @@ public class SecurityConfiguration {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
+    /**
+     * This method configures the security filter chain.
+     * It defines the security policy for HTTP requests.
+     * It disables CSRF, sets session management to stateless, and adds the JWT authentication filter.
+     *
+     * @param http The HttpSecurity to modify.
+     * @return The SecurityFilterChain.
+     * @throws Exception if an error occurs when configuring the security policy.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http

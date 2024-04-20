@@ -1,13 +1,19 @@
 package com.dev.eduacademy.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
+/**
+ * Course is an entity class that represents a course in the system.
+ * It contains the course's name, description, and whether it is published.
+ */
 @Data
 @Builder
 @NoArgsConstructor
@@ -22,27 +28,44 @@ public class Course {
     private String description;
     private Boolean isPublished;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "instructedCourses")
-    private List<User> instructors;
+    private Set<User> instructors = new HashSet<>();
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "enrolledCourses")
-    private List<User> students;
+    private Set<User> students = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
-    private List<EnrollmentRequest> enrollmentRequests;
+    private Set<EnrollmentRequest> enrollmentRequests = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
-    private List<Lesson> lessons;
+    private Set<Lesson> lessons = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
-    private List<Assignment> assignments;
+    private Set<Assignment> assignments = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
-    private List<Exam> exams;
+    private Set<Exam> exams = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "course")
-    private List<Review> reviews;
+    private Set<Grade> grades = new HashSet<>();
 
-    @OneToMany(mappedBy = "course")
-    private List<Grade> grades;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Course course)) return false;
+
+        return getId() != null ? getId().equals(course.getId()) : course.getId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
+    }
 }

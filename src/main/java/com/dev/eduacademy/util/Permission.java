@@ -4,6 +4,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 
+/**
+ * Represents the permissions of the system.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum Permission {

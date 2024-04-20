@@ -6,11 +6,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-@Getter
+/**
+ * Represents the roles of the system.
+ */
 @RequiredArgsConstructor
-public enum RoleType {
+public enum Role {
     ADMIN(
             Set.of(
                     Permission.ADMIN_GET_COURSE,
@@ -50,13 +51,20 @@ public enum RoleType {
             )
     );
 
+
+    @Getter
     private final Set<Permission> permissions;
 
+    /**
+     * Returns the authorities of the role.
+     *
+     * @return the authorities of the role
+     */
     public List<SimpleGrantedAuthority> getAuthorities() {
-        var authorities = getPermissions()
+        var authorities = new java.util.ArrayList<>(permissions
                 .stream()
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
-                .collect(Collectors.toList());
+                .toList());
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
         return authorities;
     }

@@ -2,7 +2,6 @@ package com.dev.eduacademy;
 
 import com.dev.eduacademy.model.RegisterRequest;
 import com.dev.eduacademy.service.AuthenticationService;
-import com.dev.eduacademy.util.Role;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
